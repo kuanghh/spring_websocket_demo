@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/websocket
+        http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+    <!--&lt;!&ndash;-->
+    <!--以配置文件的方式注册一个handler-->
+    <!--&ndash;&gt;-->
+    <!--<websocket:handlers>-->
+        <!--&lt;!&ndash;处理WebSocket的请求路径&ndash;&gt;-->
+        <!--&lt;!&ndash;-->
+            <!--这里一定要加上.action，因为在web.xml中，配置的DispatcherServlet的处理路径时有.action 为结尾的-->
+            <!--如果不加上.action,,那么生成的webSocket路径时不带上.action的，以/webSocket路径访问webSocket,DispatcherServlet会自动过滤掉-->
+            <!--，导致无法连接上webSocket服务-->
+        <!--&ndash;&gt;-->
+        <!--<websocket:mapping path="/webSocket.action" handler="myHandler"/>-->
+
+        <!--&lt;!&ndash;配置握手拦截器&ndash;&gt;-->
+        <!--<websocket:handshake-interceptors>-->
+            <!--<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>-->
+        <!--</websocket:handshake-interceptors>-->
+    <!--</websocket:handlers>-->
+
+
+    <!--&lt;!&ndash;以配置文件方式注册一个handler 并给予sockJs支持&ndash;&gt;-->
+    <!--<websocket:handlers>-->
+        <!--<websocket:mapping path="/sockJS.action" handler="mySockJSHandler"/>-->
+        <!--<websocket:handshake-interceptors>-->
+            <!--<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>-->
+        <!--</websocket:handshake-interceptors>-->
+        <!--<websocket:sockjs/>-->
+    <!--</websocket:handlers>-->
+
+
+    <!--&lt;!&ndash;设置webSocket传入的信息大小&ndash;&gt;-->
+    <!--<bean class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean ">-->
+        <!--<property name="maxTextMessageBufferSize" value="8192"/>-->
+        <!--<property name="maxBinaryMessageBufferSize" value="8192"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="myHandler" class="com.khh.web.webSocket.MyHandler" />-->
+    <!--<bean id="mySockJSHandler" class="com.khh.web.webSocket.MySockJSHandler" />-->
+
+
+</beans>
