@@ -2,9 +2,11 @@ package com.khh.demo.stomp.web.mvc;
 
 import com.khh.demo.stomp.handler.MyHandler;
 import com.khh.demo.stomp.handler.StompMessageHandshakeHandler;
+import com.khh.demo.stomp.interceptor.UserInterceptor;
 import com.khh.demo.stomp.interceptor.WebSocketHandshakeInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
@@ -38,4 +40,24 @@ public class MyWebSocketConf extends AbstractWebSocketMessageBrokerConfigurer {
         //这句表示给指定用户发送（一对一）的主题前缀是“/user”;
         registry.setUserDestinationPrefix("/user");
     }
+
+    /**
+     * 配置客户端入站通道拦截器
+     */
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.setInterceptors(createUserInterceptor());
+    }
+
+    /**
+     *
+     * @Title: createUserInterceptor
+     * @Description: 将客户端渠道拦截器加入spring ioc容器
+     * @return
+     */
+    @Bean
+    public UserInterceptor createUserInterceptor() {
+        return new UserInterceptor();
+    }
+
 }

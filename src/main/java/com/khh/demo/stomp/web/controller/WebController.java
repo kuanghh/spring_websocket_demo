@@ -50,4 +50,19 @@ public class WebController {
     public String index4() throws Exception{
         return "stomp4";
     }
+
+    @RequestMapping(value = "/index5")
+    public String index5() throws Exception{
+        return "stomp5";
+    }
+
+    @RequestMapping(value = "/index6")
+    public String index6() throws Exception{
+        return "/sendToUser/stomp6";
+    }
+
+    @RequestMapping(value = "/index7")
+    public String index7() throws Exception{
+        return "/sendToUser/stomp7";
+    }
 }

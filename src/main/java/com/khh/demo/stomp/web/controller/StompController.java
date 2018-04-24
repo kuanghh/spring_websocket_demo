@@ -1,13 +1,17 @@
 package com.khh.demo.stomp.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.khh.demo.stomp.entity.Shout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +37,8 @@ public class StompController {
     @Autowired
     public SimpMessagingTemplate template;
 
-
+    @Autowired
+    private SimpUserRegistry userRegistry;
 
     //这里访问的时候应该用/app/myShout
     @MessageMapping("/myShout")
@@ -95,21 +100,6 @@ public class StompController {
         return shout;
     }
 
-
-    /**
-     * 如果发送的消息路径是/app/myShout2，那么即使用户订阅了/app/myShout2，客户也不能收到
-     */
-    @RequestMapping(value = "/dynamicMsg",method = RequestMethod.GET)
-    @ResponseBody
-    public void sendClientMsgDynamic(){
-        System.out.println("send dynamicMsg");
-        Shout shout = new Shout();
-        shout.setMessage("this is dynamic message");
-        this.template.convertAndSend("/topic/myShout2",shout);
-        return;
-    }
-
-
     /**
      * 发送给 订阅了“/user/” + 用户Id + “/search” 的客户,用户id要能识别,注意，用户Id能让Broker识别，
      *                                                              例如：因为registry.enableSimpleBroker("/queue","/topic")，所以能识别/queue
@@ -125,17 +115,31 @@ public class StompController {
     }
 
     /**
-     * 如果发送的消息路径是/app/myShout2，那么即使用户订阅了/app/myShout2，客户也不能收到
+     * 使用simpMessageTemplate发送到指定主题, 成功
+     * @param greeting
      */
-    @RequestMapping(value = "/user",method = RequestMethod.GET)
-    @ResponseBody
-    public void sendUserMsgDynamic(){
-        System.out.println("send dynamicMsg");
-        Shout shout = new Shout();
-        shout.setMessage("this is dynamic message");
-//        template.convertAndSendToUser("1","/message",shout);//失败
-//        template.convertAndSendToUser("/queue","/user/search",shout);//失败
-        return;
+    @MessageMapping(value="/greetings")
+    public void greet(String greeting) {
+        String text = "id:" + greeting;
+        this.template.convertAndSend("/topic/myShout2", text);
+    }
+
+    @MessageMapping("/toUser")
+//  @SendToUser(destinations="/queue/errors", broadcast=false)，
+//  broadcast的作用是，如果一个用户有多个session，当消息想发送到一个原session的时候，可以设置broadcast=false
+    public void sentToUser(String message){
+        System.out.println("进来指定发送了");
+
+        int i = 1;
+        for (SimpUser user : userRegistry.getUsers()) {
+            System.out.println("用户" + i++ + "---" + user);
+        }
+
+        JSONObject obj = JSONObject.parseObject(message);
+        String userId = obj.getString("userId");
+        String message_info = obj.getString("message");
+        System.out.println("message_info = " + message_info +",userId = " + userId);
+        this.template.convertAndSendToUser(userId, "/queue/abc", message_info);
     }
 
 }
