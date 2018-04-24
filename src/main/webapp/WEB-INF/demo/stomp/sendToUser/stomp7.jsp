@@ -26,11 +26,12 @@
     var stompClient = Stomp.over(socket);
 
     var userId = "s7";
-    var payload = JSON.stringify({'message':'this is my stomp message','userId': userId});
+    var targetUserId = "s6";
+    var payload = JSON.stringify({'message':'this is my stomp message','userId': targetUserId});
 
-    stompClient.connect('guest','guest',function (frame) {//连接stomp端点
+    stompClient.connect({name:userId},function (frame) {//连接stomp端点
 
-        stompClient.subscribe("/user/"+userId+"/queue/abc", function(message){   //客户订阅
+        stompClient.subscribe("/user/queue/abc", function(message){   //客户订阅
 
             alert(message.body);
 //            var json = JSON.parse(message.body);
