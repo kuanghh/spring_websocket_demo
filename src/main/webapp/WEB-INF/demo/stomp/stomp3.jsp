@@ -24,13 +24,15 @@
     stompClient.connect('guest','guest',function (frame) {//连接stomp端点
 
 
-        stompClient.subscribe('/topic/myShout2', function(message){   //客户订阅/app/myShout2
+        stompClient.subscribe('/topic/myShout2', function(message){   //客户订阅/topic/myShout2
             // message就是服务端返回过来的消息
             alert(message);
             var json = JSON.parse(message.body);
 
         });
-    })
+    });
+
+    stompClient.send("/app/myShout2",{},payload);//客户发送消息到/app/myShout2
 
     //在浏览器多开一个窗口，并且访问"http://localhost:8080/spring_websocket_demo/dynamicMsg.action"
     //检测是否会受到消息，结果：是
