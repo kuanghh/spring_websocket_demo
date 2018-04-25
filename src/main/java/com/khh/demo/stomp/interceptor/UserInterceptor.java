@@ -16,7 +16,6 @@ import java.util.Map;
  * Created by admin on 2018/4/24.
  */
 public class UserInterceptor extends ChannelInterceptorAdapter {
-
     /**
      * 获取包含在stomp中的用户信息
      */

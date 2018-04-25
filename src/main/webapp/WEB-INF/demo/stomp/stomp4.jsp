@@ -21,7 +21,7 @@
 
     var payload = JSON.stringify({'message':'this is my stomp message'});
 
-    stompClient.connect('guest','guest',function (frame) {//连接stomp端点
+    stompClient.connect({name : 'guest'},function (frame) {//连接stomp端点
 
         stompClient.subscribe('/user/queue/search', function(message){   //客户订阅
             // message就是服务端返回过来的消息

@@ -101,8 +101,8 @@ public class StompController {
     }
 
     /**
-     * 发送给 订阅了“/user/” + 用户Id + “/search” 的客户,用户id要能识别,注意，用户Id能让Broker识别，
-     *                                                              例如：因为registry.enableSimpleBroker("/queue","/topic")，所以能识别/queue
+     * 发送给 订阅了“/user/queue/search” 的客户,只会返回给当前用户，并不是广播发送
+     * 例如：因为registry.enableSimpleBroker("/queue","/topic")，所以能识别/queue
      * @return
      */
     @MessageMapping("/message")
