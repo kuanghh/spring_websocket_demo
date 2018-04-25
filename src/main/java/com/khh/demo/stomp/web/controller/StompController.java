@@ -128,8 +128,6 @@ public class StompController {
 //  @SendToUser(destinations="/queue/errors", broadcast=false)，
 //  broadcast的作用是，如果一个用户有多个session，当消息想发送到一个原session的时候，可以设置broadcast=false
     public void sentToUser(String message){
-        System.out.println("进来指定发送了");
-
         int i = 1;
         for (SimpUser user : userRegistry.getUsers()) {
             System.out.println("用户" + i++ + "---" + user);
